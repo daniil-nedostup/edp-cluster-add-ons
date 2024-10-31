@@ -89,7 +89,7 @@ edp-install:
   edp-tekton:
     global:
       dnsWildCard: eks-test.aws.main.edp.projects.epam.com
-      gerritSSHPort: 30020
+      gerritSSHPort: 30021
       dockerRegistry:
         type: "ecr"
         url: "093899590031.dkr.ecr.eu-central-1.amazonaws.com"
@@ -126,7 +126,7 @@ edp-install:
         host: gerrit.edp-delivery-new
         gitUser: edp-ci
         nameSshKeySecret: gerrit-ciuser-sshkey
-        sshPort: 30020
+        sshPort: 30021
         quickLink:
           host: gerrit-edp-delivery-new.eks-test.aws.main.edp.projects.epam.com
         webhook:
@@ -177,7 +177,7 @@ edp-install:
         - "vladyslav_palyvoda@epam.com"
         - "mykola_serdiuk@epam.com"
         - "daniil_nedostup@epam.com"
-      gerritSSHPort: "30020"
+      gerritSSHPort: "30021"
     gerrit:
       #      extraEnv:
       #        - name: AUTH_TYPE
