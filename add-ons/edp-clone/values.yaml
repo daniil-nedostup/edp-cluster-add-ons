@@ -6,6 +6,7 @@ edp-install:
     dnsWildCard: eks-test.aws.main.edp.projects.epam.com
     # -- platform type that can be "kubernetes" or "openshift"
     platform: kubernetes
+    apiGatewayUrl:
     # -- Can be gerrit, github or gitlab. By default: github
     gitProviders:
       - github
@@ -62,6 +63,7 @@ edp-install:
     manageEDPInstallSecretsName: /edp/eks-sandbox/edp-delivery-dn-dev-eks-test-new
 #    manageCodemieSecretsName: /edp/eks-sandbox/edp-delivery-codemie-dev
     manageGitProviderSecretsName: /edp/eks-sandbox/edp-delivery-git-providers-dn-eks
+    manageCodemieSecretsName: /edp/eks-sandbox/edp-delivery-codemie-dev
 
   cd-pipeline-operator:
     secretManager: none
