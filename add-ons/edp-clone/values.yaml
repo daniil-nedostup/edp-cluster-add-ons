@@ -60,6 +60,8 @@ edp-install:
       aws:
         role: arn:aws:iam::093899590031:role/AWSIRSASandboxExternalSecretOperatorAccess
     manageEDPInstallSecretsName: /edp/eks-sandbox/edp-delivery-dn-dev-eks-test-new
+#    manageCodemieSecretsName: /edp/eks-sandbox/edp-delivery-codemie-dev
+    manageGitProviderSecretsName: /edp/eks-sandbox/edp-delivery-git-providers-dn-eks
 
   cd-pipeline-operator:
     secretManager: none
