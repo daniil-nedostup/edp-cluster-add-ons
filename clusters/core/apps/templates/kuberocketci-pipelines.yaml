@@ -9,14 +9,14 @@ metadata:
 spec:
   project: {{ .Values.argoProject | default "default" }}
   source:
-    repoURL: ssh://git@github.com:22/epmd-edp/helm-helm-pipeline.git
+    repoURL: ssh://git@github.com:22/daniil-nedostup/tekton-custom-pipelines.git
     path: .
     targetRevision: main
     helm:
-      releaseName: pipelines
+      releaseName: tekton-custom-pipelines
   destination:
     name: {{ .Values.destinationServer | default "in-cluster" }}
-    namespace: krci
+    namespace: edp-delivery-dn-dev
   syncPolicy:
     syncOptions:
       - CreateNamespace={{ (index .Values "kuberocketci-pipelines" "createNamespace") }}
