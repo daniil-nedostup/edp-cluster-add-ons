@@ -62,7 +62,7 @@ kuberocketci:
 
 kuberocketci-pipelines:
   createNamespace: false
-  enable: false
+  enable: true
 
 kuberocketci-rbac:
   createNamespace: false
