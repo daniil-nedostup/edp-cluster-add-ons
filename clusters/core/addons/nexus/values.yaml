@@ -12,7 +12,7 @@ nexus-repository-manager:
     enabled: true
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: "900m"
-    hostRepo: nexus-ci.example.com
+    hostRepo: nexus-ci.eks-test.aws.main.edp.projects.epam.com
 
   deployment:
     initContainers:
@@ -28,7 +28,7 @@ nexus-repository-manager:
     docker:
       enabled: true
       registries:
-        - host: nexus-ci-container.example.com
+        - host: nexus-ci-container.eks-test.aws.main.edp.projects.epam.com
           port: 5000
     env:
       - name: NEXUS_SECURITY_RANDOMPASSWORD
@@ -48,16 +48,8 @@ nexus-repository-manager:
 
   persistence:
     enabled: true
-    storageSize: 30Gi
+    storageSize: 4Gi
 
-# Configuration for setting up resources in Keycloak to enable OIDC authentication.
-# Prerequisite: Ensure that the Keycloak Operator is installed and integrated with Keycloak.
-# Refer to the installation guide for the Keycloak Operator:
-# https://github.com/epam/edp-cluster-add-ons/tree/main/clusters/core/addons/keycloak-operator
-#
-# Additionally, necessary Keycloak resources such as realms, roles, and groups must be created
-# to support component functionality. This can be done using the provided add-ons or manually:
-# https://github.com/epam/edp-cluster-add-ons/tree/main/clusters/core/addons/kuberocketci-rbac
 oauth2-proxy:
   enabled: false
   config:
@@ -70,12 +62,12 @@ oauth2-proxy:
       cookie_secure = "false"
       email_domains = [ "*" ]
       insecure_oidc_allow_unverified_email = "true"
-      oidc_issuer_url = "https://keycloak.example.com/auth/realms/<cluster_name>"
+      oidc_issuer_url = "https://idp.core.kuberocketci.io/realms/eks-test"
       pass_access_token = "true"
       pass_authorization_header = "true"
       pass_basic_auth = "false"
       provider = "keycloak-oidc"
-      redirect_url = "https://nexus.example.com/oauth2/callback"
+      redirect_url = "https://nexus.eks-test.aws.main.edp.projects.epam.com/oauth2/callback"
       skip_jwt_bearer_tokens = "true"
       upstreams = [ "http://nexus:8081" ]
       whitelist_domains = ["*"]
@@ -86,31 +78,4 @@ oauth2-proxy:
   ingress:
     enabled: true
     hosts:
-      - nexus.example.com
-
-# This section enables configuration for using External Secrets Operator (ESO) as the secret manager.
-# Prerequisite: Ensure that ESO is installed in the cluster.
-# Refer to the EDP cluster add-on for ESO installation and setup:
-# https://github.com/epam/edp-cluster-add-ons/tree/main/clusters/core/addons/external-secrets
-#
-# Ensure that you have created the necessary roles for ESO integration.
-# Follow the detailed instructions here:
-# https://docs.kuberocketci.io/docs/operator-guide/secrets-management/external-secrets-operator-integration#aws-parameter-store-scenario-in-kuberocketci
-eso:
-  # -- Install components of the ESO.
-  enabled: true
-  # -- Defines provider type. One of `aws` or `generic`.
-  type: "aws"
-  # -- Defines Secret Store name.
-  secretStoreName: "aws-parameterstore-nexus"
-  # -- Value name in AWS ParameterStore, AWS SecretsManager or other Secret Store.
-  secretName: "/infra/core/addons/nexus"
-  # -- Role ARN for the ExternalSecretOperator to assume.
-  roleArn: arn:aws:iam::012345678910:role/AWSIRSA_Shared_ExternalSecretOperatorAccess
-  # Defines Secret Store configuration. Used when eso.type is set to "generic".
-  generic:
-    secretStore:
-      # -- Defines SecretStore provider configuration.
-      providerConfig: {}
-      #  gcpsm:
-      #    projectID: "alphabet-123"
+      - nexus.eks-test.aws.main.edp.projects.epam.com

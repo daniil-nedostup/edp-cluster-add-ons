@@ -8,7 +8,7 @@ spec:
   refreshInterval: 1h
   secretStoreRef:
     kind: SecretStore
-    name: {{ .Values.eso.secretStoreName }}
+    name: aws-parameterstore
   data:
   - secretKey: password
     remoteRef:

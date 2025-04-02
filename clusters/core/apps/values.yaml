@@ -190,12 +190,12 @@ nexus-ce:
 
 nexus-operator:
   createNamespace: false
-  enable: false
+  enable: true
   namespace: nexus
 
 nexus:
-  createNamespace: false
-  enable: false
+  createNamespace: true
+  enable: true
   namespace: nexus
 
 # OAuth2 Proxy for tekton dashboard

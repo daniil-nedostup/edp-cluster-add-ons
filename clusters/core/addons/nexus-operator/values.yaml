@@ -14,7 +14,7 @@ eso:
   # -- Defines Secret Store name.
   secretStoreName: "aws-parameterstore"
   # -- Value name in AWS ParameterStore, AWS SecretsManager or other Secret Store.
-  secretName: "/infra/core/addons/nexus-operator"
+  secretName: "/edp/eks-sandbox/addons/nexus-operator"
   # -- Role ARN for the ExternalSecretOperator to assume.
   roleArn: arn:aws:iam::012345678910:role/AWSIRSA_Shared_ExternalSecretOperatorAccess
   # -- To change default admin password in accout navigate -> Configuration -> Users -> admin -> Change password

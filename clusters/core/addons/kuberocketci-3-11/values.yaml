@@ -1,0 +1,208 @@
+edp-install:
+## edp-install configuration
+## Full list of parameters are available in https://github.com/epam/edp-install/blob/release/3.8/deploy-templates/values.yaml and in each of subchart
+  global:
+    # -- a cluster DNS wildcard name
+    dnsWildCard: eks-test.aws.main.edp.projects.epam.com
+    # API Gateway URL configuration for Widget Functionality
+    # This configuration specifies the URL of the API Gateway that is used by various widgets within the platform.
+    # The 'api_gateway_url' should be set to the ingress URL of the KrakenD API Gateway
+    # By default, this value is left empty, and widgets are disabled
+    # -- API Gateway URL configuration for Widget Functionality
+    apiGatewayUrl: ""
+    # -- platform type that can be "kubernetes" or "openshift"
+    platform: kubernetes
+    # -- Can be gerrit, github or gitlab. By default: github
+    gitProviders:
+      - github
+      - gerrit
+      - bitbucket
+    # Below is an example of endpoint values for each registry type:
+    # type:      | url
+    # =============================
+    # ecr        | <aws_account_id>.dkr.ecr.<aws_region>.amazonaws.com
+    # harbor     | <registry.example.com>
+    # dockerhub  | 'docker.io'
+    # openshift  | <image-registry.openshift-image-registry.svc:5000>
+
+    dockerRegistry:
+      type: "ecr"
+      url: "093899590031.dkr.ecr.eu-central-1.amazonaws.com"
+      space: "edp-delivery-dn-3-10"
+      awsRegion: "eu-central-1"
+    # For example to integrate platform with dockerhub and publish image under 'my_user' account:
+    # dockerRegistry:
+    #   type: "dockerhub"
+    #   url: "docker.io"
+    #   space: "my_user"
+    # =============================
+    # dockerRegistry:
+    #   type: "ecr"
+    #   url: "<aws_account_id>.dkr.ecr.<aws_region>.amazonaws.com"
+    #   space: "edp"
+    #   awsRegion: "eu-central-1"
+
+  # This section enables configuration for using External Secrets Operator (ESO) as the secret manager.
+  # Prerequisite: Ensure that ESO is installed in the cluster.
+  # Refer to the EDP cluster add-on for ESO installation and setup:
+  # https://github.com/epam/edp-cluster-add-ons/tree/main/clusters/core/addons/external-secrets
+  #
+  # Ensure that you have created the necessary roles for ESO integration.
+  # Follow the detailed instructions here:
+  # https://docs.kuberocketci.io/docs/operator-guide/secrets-management/external-secrets-operator-integration#aws-parameter-store-scenario-in-kuberocketci
+  externalSecrets:
+    enabled: true
+    secretProvider:
+      aws:
+        role: arn:aws:iam::093899590031:role/AWSIRSASandboxExternalSecretOperatorAccess
+    manageEDPInstallSecretsName: /edp/eks-sandbox/edp-delivery-dn-3-10
+    manageGitProviderSecretsName: /edp/eks-sandbox/edp-delivery-git-providers-dn-eks
+    manageCodemieSecretsName: /edp/eks-sandbox/edp-delivery-codemie-dev
+
+  # -- Define platform Quick Links, more details: https://github.com/epam/edp-codebase-operator/
+  # @default -- ``
+  quickLinks:
+  #   argocd: ""
+  #   defectdojo: ""
+  #   dependency_track: ""
+  #   docker_registry: ""
+  #   grafana: ""
+  #   kibana: ""
+  #   nexus: ""
+  #   sonar: ""
+  #   codemie: ""
+
+  # -- Define extra Quick Links, more details: https://github.com/epam/edp-codebase-operator/
+  extraQuickLinks: {}
+    # - prometheus:
+    #     url: https://ingress-prometheus.example.com
+    #     visible: true
+    #     icon: icon_in_base64
+    # - another_tool:
+    #     url: https://ingress-anothertool.example.com
+    #     visible: true
+    #     icon: icon_in_base64
+
+  edp-headlamp:
+    config:
+      # -- Ensure that the specified client is associated with cluster OIDC integration.
+      # -- For detailed instructions, refer to: https://docs.kuberocketci.io/docs/operator-guide/auth/configure-keycloak-oidc-eks, https://docs.kuberocketci.io/docs/operator-guide/auth/ui-portal-oidc
+      oidc:
+        # Enable OIDC integration. Default: false
+        enabled: true
+        # -- OIDC Issuer URL for authentication.
+        # -- This URL identifies the OpenID Connect provider endpoint. Examples:
+        # -- Keycloak: https://keycloak.example.com/auth/realms/<realm-name>
+        # -- Azure Entra: https://sts.windows.net/<tenant-id>/
+        issuerUrl: "https://keycloak.eks-core.aws.main.edp.projects.epam.com/auth/realms/eks-test"
+        # -- OIDC client ID
+        clientID: "eks-test"
+        # -- OIDC client secret name
+        clientSecretName: "keycloak-client-headlamp-secret"
+        # -- OIDC client secret key
+        clientSecretKey: "clientSecret"
+
+  edp-tekton:
+    gerritSSHPort: 30021
+    dockerRegistry:
+      type: "ecr"
+      url: "093899590031.dkr.ecr.eu-central-1.amazonaws.com"
+      space: "edp-delivery-dn-3-10"
+      awsRegion: "eu-central-1"
+    kaniko:
+      roleArn: "arn:aws:iam::093899590031:role/AWSIRSACoreSandboxEdpDeliveryKaniko"
+    tekton-cache:
+      enabled: true
+      # Tekton cache endpoint for pipeline-library helm chart. See charts/pipelines-library/templates/resources/cm-tekton-cache.yaml
+      # url: http://tekton-cache:8080
+
+    # GitServers configuration section
+    # GitServer creation depends on the gitProviders configuration, if gitProvider is not enabled,
+    # the GitServer will not be created.
+    gitServers:
+      gerrit:
+        gitProvider: gerrit
+        host: gerrit.edp-delivery-old
+        gitUser: edp-ci
+        nameSshKeySecret: gerrit-ciuser-sshkey
+        sshPort: 30021
+        quickLink:
+          host: gerrit-edp-delivery-old.eks-test.aws.main.edp.projects.epam.com
+        webhook:
+          skipWebhookSSLVerification: false
+        eventListener:
+          enabled: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ingress:
+            enabled: false
+
+      github:
+        gitProvider: github
+        host: github.com
+        webhook:
+          skipWebhookSSLVerification: false
+        eventListener:
+          enabled: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ingress:
+            enabled: true
+
+      bitbucket:
+        gitProvider: bitbucket
+        host: bitbucket.org
+        quickLink:
+          enabled: true
+        webhook:
+          skipWebhookSSLVerification: false
+        eventListener:
+          enabled: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ingress:
+            enabled: true
+
+  gerrit-operator:
+    enabled: true
+    global:
+      platform: "kubernetes"
+      dnsWildCard: eks-test.aws.main.edp.projects.epam.com
+      admins:
+        - "oleksandr_taruraiev@epam.com"
+        - "daniil_nedostup@epam.com"
+      gerritSSHPort: "30021"
+    gerrit:
+      sso:
+        enabled: false
+
+  cd-pipeline-operator:
+    # -- Defines the type of the tenant engine that can be "none", "kiosk" or "capsule";
+    # for Stages with external cluster tenancyEngine will be ignored. Default: none
+    tenancyEngine: "none"
+    # -- Flag indicating whether the operator should manage secrets for stages.
+    # This parameter controls the provisioning of the 'regcred' secret within deployed environments, facilitating access to private container registries.
+    # Set the parameter to "none" under the following conditions:
+    #   - If 'global.dockerRegistry.type=ecr' and IRSA is enabled, or
+    #   - If 'global.dockerRegistry.type=openshift'.
+    # For private registries, choose the most appropriate method to provide credentials to deployed environments. Refer to the guide for managing container registries (https://docs.kuberocketci.io/docs/user-guide/manage-container-registries).
+    # Possible values: own/eso/none.
+    #   - own: Copies the secret once from the parent namespace, without subsequent reconciliation. If updated in the parent namespace, manual updating in all created namespaces is required.
+    #   - eso: The secret will be managed by the External Secrets Operator (requires installation and configuration in the cluster: https://docs.kuberocketci.io/docs/operator-guide/secrets-management/install-external-secrets-operator).
+    #   - none: Disables secrets management logic.
+    secretManager: own
