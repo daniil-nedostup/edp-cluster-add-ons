@@ -158,9 +158,9 @@ keycloak-operator:
   namespace: keycloak-operator
 
 krakend:
-  createNamespace: false
-  enable: false
-  namespace: krci-krakend
+  createNamespace: true
+  enable: true
+  namespace: krakend
 
 kuberocketci-pipelines:
   createNamespace: false

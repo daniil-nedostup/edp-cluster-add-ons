@@ -7,14 +7,13 @@ krakend:
       nginx.ingress.kubernetes.io/cors-allow-origin: '*'
       nginx.ingress.kubernetes.io/enable-cors: 'true'
     hosts:
-      - host: api.example.com
+      - host: api.eks-test.aws.main.edp.projects.epam.com
         paths:
           - path: /
             pathType: ImplementationSpecific
   krakend:
     partials: null
     settings: null
-    # -- Defines the name of the Secret that contains the KrakenD configuration.
     envFromSecret: "krakend"
     config: |
       {
@@ -201,30 +200,3 @@ krakend:
           }
         ]
       }
-
-# This section enables configuration for using External Secrets Operator (ESO) as the secret manager.
-# Prerequisite: Ensure that ESO is installed in the cluster.
-# Refer to the EDP cluster add-on for ESO installation and setup:
-# https://github.com/epam/edp-cluster-add-ons/tree/main/clusters/core/addons/external-secrets
-#
-# Ensure that you have created the necessary roles for ESO integration.
-# Follow the detailed instructions here:
-# https://docs.kuberocketci.io/docs/operator-guide/secrets-management/external-secrets-operator-integration#aws-parameter-store-scenario-in-kuberocketci
-eso:
-  # -- Install components of the ESO.
-  enabled: true
-  # -- Defines provider type. One of `aws` or `generic`.
-  type: "aws"
-  # -- Defines Secret Store name.
-  secretStoreName: "aws-parameterstore"
-  # -- Value name in AWS ParameterStore, AWS SecretsManager or other Secret Store.
-  secretName: "/infra/core/addons/krakend"
-  # -- Role ARN for the ExternalSecretOperator to assume.
-  roleArn: arn:aws:iam::012345678910:role/AWSIRSA_Shared_ExternalSecretOperatorAccess
-  # Defines Secret Store configuration. Used when eso.type is set to "generic".
-  generic:
-    secretStore:
-      # -- Defines SecretStore provider configuration.
-      providerConfig: {}
-      #  gcpsm:
-      #    projectID: "alphabet-123"
