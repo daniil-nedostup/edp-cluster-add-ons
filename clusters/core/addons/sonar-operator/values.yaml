@@ -35,26 +35,14 @@ sonar-operator:
   #    subPath: CA.crt
 
 # -- URL and secret name which use sonar operator for configuring sonar
-sonarUrl: "https://sonar.example.com"
-
-# -- This is credantials name with administator rights for sonar.
+sonarUrl: "https://sonar.eks-test.aws.main.edp.projects.epam.com"
 sonarSecret: "sonar-admin-password"
-# -- If use a clean install of Sonar, need to set admin password during first login after deploy
-# -- To change password in accout navigate -> Administration -> Security -> Users -> admin -> Enter a new password
 
-
-# Configuration for setting up resources in Keycloak to enable OIDC authentication.
-# Prerequisite: Ensure that the Keycloak Operator is installed and integrated with Keycloak.
-# Refer to the installation guide for the Keycloak Operator:
-# https://github.com/epam/edp-cluster-add-ons/tree/main/clusters/core/addons/keycloak-operator
-#
-# Additionally, necessary Keycloak resources such as realms, roles, and groups must be created
-# to support component functionality. This can be done using the provided add-ons or manually:
-# https://github.com/epam/edp-cluster-add-ons/tree/main/clusters/core/addons/kuberocketci-rbac
+# -- Integration with keycloak
 oidc:
   enabled: false
-  keycloakUrl: "https://keycloak.example.com"
-  keycloakRealm: "shared"
+  keycloakUrl: "https://idp.core.kuberocketci.io"
+  keycloakRealm: "sandbox"
 
 # This section enables configuration for using External Secrets Operator (ESO) as the secret manager.
 # Prerequisite: Ensure that ESO is installed in the cluster.
@@ -72,9 +60,9 @@ eso:
   # -- Defines Secret Store name.
   secretStoreName: "aws-parameterstore"
   # -- Value name in AWS ParameterStore, AWS SecretsManager or other Secret Store.
-  secretName: "/infra/core/addons/sonar-operator"
+  secretName: "/edp/eks-sandbox/addons/sonar-operator"
   # -- Role ARN for the ExternalSecretOperator to assume.
-  roleArn: arn:aws:iam::012345678910:role/AWSIRSA_Shared_ExternalSecretOperatorAccess
+  roleArn: arn:aws:iam::093899590031:role/AWSIRSASandboxExternalSecretOperatorAccess
   # Defines Secret Store configuration. Used when eso.type is set to "generic".
   generic:
     secretStore:

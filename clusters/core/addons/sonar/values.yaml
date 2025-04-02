@@ -5,10 +5,15 @@ sonarqube:
   ingress:
     enabled: true
     hosts:
-    - name: sonar.example.com
+    - name: sonar.eks-test.aws.main.edp.projects.epam.com
     annotations:
       # This property allows for reports up to a certain size to be uploaded to SonarQube
       nginx.ingress.kubernetes.io/proxy-body-size: "64m"
+      # This property allows for CORS requests to be made to SonarQube (we use it on the EDP Portal Widget)
+      # nginx.ingress.kubernetes.io/enable-cors: "true"
+      # nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+      # nginx.ingress.kubernetes.io/cors-allow-methods: "OPTIONS, GET"
+      # nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
 
   resources:
     limits:
@@ -22,16 +27,16 @@ sonarqube:
     install:
       - "https://github.com/vaulttec/sonar-auth-oidc/releases/download/v2.1.1/sonar-auth-oidc-plugin-2.1.1.jar"
       - "https://github.com/checkstyle/sonar-checkstyle/releases/download/10.20.1/checkstyle-sonar-plugin-10.20.1.jar"
-      - "https://github.com/spotbugs/sonar-findbugs/releases/download/v4.3.0/sonar-findbugs-plugin-4.3.0.jar"
+      - "https://github.com/spotbugs/sonar-findbugs/releases/download/4.2.9/sonar-findbugs-plugin-4.2.9.jar"
       - "https://github.com/jborgers/sonar-pmd/releases/download/3.5.1/sonar-pmd-plugin-3.5.1.jar"
       - "https://github.com/sbaudoin/sonar-ansible/releases/download/v2.5.1/sonar-ansible-plugin-2.5.1.jar"
       - "https://github.com/sbaudoin/sonar-yaml/releases/download/v1.9.1/sonar-yaml-plugin-1.9.1.jar"
       - "https://github.com/Inform-Software/sonar-groovy/releases/download/1.8/sonar-groovy-plugin-1.8.jar"
       - "https://github.com/mc1arke/sonarqube-community-branch-plugin/releases/download/1.14.0/sonarqube-community-branch-plugin-1.14.0.jar"
 
-  # Community branch plugin configuration
   jvmCeOpts: -javaagent:/opt/sonarqube/extensions/plugins/sonarqube-community-branch-plugin-1.14.0.jar=ce
   jvmOpts: -javaagent:/opt/sonarqube/extensions/plugins/sonarqube-community-branch-plugin-1.14.0.jar=web
+  # Community branch plugin
 
   env:
   - name: SONAR_TELEMETRY_ENABLE
@@ -49,4 +54,3 @@ sonarqube:
     jdbcUsername: "sonar"
     jdbcSecretName: sonar-pguser-sonar
     jdbcSecretPasswordKey: "password"
-

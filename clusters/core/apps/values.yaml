@@ -217,8 +217,8 @@ opentelemetry-operator:
 
 # Postgres Operator
 postgres-operator:
-  createNamespace: false
-  enable: false
+  createNamespace: true
+  enable: true
   namespace: postgres-operator
 
 prometheus-operator:
@@ -237,13 +237,13 @@ report-portal:
   namespace: report-portal
 
 sonar:
-  createNamespace: false
-  enable: false
+  createNamespace: true
+  enable: true
   namespace: sonar
 
 sonar-operator:
   createNamespace: false
-  enable: false
+  enable: true
   namespace: sonar
 
 storage-class:
