@@ -62,15 +62,36 @@ edp-install:
   # -- Define platform Quick Links, more details: https://github.com/epam/edp-codebase-operator/
   # @default -- ``
   quickLinks:
-  #   argocd: ""
-  #   defectdojo: ""
-  #   dependency_track: ""
-  #   docker_registry: ""
-  #   grafana: ""
-  #   kibana: ""
-  #   nexus: ""
-  #   sonar: ""
-  #   codemie: ""
+    # Base URL value for the argocd Quick Link
+    argocd: ""
+    # Base URL value for the codemie Quick Link
+    codemie: ""
+    # Base URL value for the defectdojo Quick Link
+    defectdojo: ""
+    # Base URL value for the dependency track Quick Link
+    dependency_track: ""
+    # Base URL value for the container registry Quick Link (e.g. Nexus, DockerHub, ECR, etc.)
+    docker_registry: ""
+    # Configuration for the logging Quick Link
+    logging:
+      # -- Define the provider name for correct URL generation.
+      # Available providers: "opensearch", "datadog".
+      # If the provider name is not specified, the base URL will be used.
+      provider: ""
+      # Base URL value for the logging Quick Link
+      url: ""
+    # Configuration for the monitoring Quick Link
+    monitoring:
+      # -- Define the provider name for correct URL generation.
+      # Available providers: "grafana", "datadog".
+      # If the provider name is not specified, the base URL will be used.
+      provider: ""
+      # Base URL value for the monitoring Quick Link
+      url: ""
+    # Base URL value for the nexus Quick Link
+    nexus: ""
+    # Base URL value for the sonar Quick Link
+    sonar: ""
 
   # -- Define extra Quick Links, more details: https://github.com/epam/edp-codebase-operator/
   extraQuickLinks: {}
@@ -127,6 +148,7 @@ edp-install:
         nameSshKeySecret: gerrit-ciuser-sshkey
         sshPort: 30021
         quickLink:
+          enabled: true
           host: gerrit-edp-delivery-old.eks-test.aws.main.edp.projects.epam.com
         webhook:
           skipWebhookSSLVerification: false
@@ -143,6 +165,8 @@ edp-install:
             enabled: false
 
       github:
+        quickLink:
+          enabled: true
         gitProvider: github
         host: github.com
         webhook:
