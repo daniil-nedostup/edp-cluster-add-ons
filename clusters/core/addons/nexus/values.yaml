@@ -79,3 +79,6 @@ oauth2-proxy:
     enabled: true
     hosts:
       - nexus.eks-test.aws.main.edp.projects.epam.com
+
+eso:
+  enabled: false
