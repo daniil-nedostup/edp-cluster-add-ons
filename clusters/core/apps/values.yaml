@@ -174,9 +174,9 @@ kuberocketci-rbac:
   namespace: krci-security
 
 kuberocketci:
-  createNamespace: false
-  enable: false
-  namespace: krci
+  createNamespace: true
+  enable: true
+  namespace: edp-delivery-old
 
 minio-operator:
   createNamespace: false

@@ -13,7 +13,7 @@ spec:
     path: clusters/{{ .Values.clusterName }}/addons/kuberocketci
     targetRevision: {{ .Values.targetRevision }}
     helm:
-      releaseName: krci
+      releaseName: edp-delivery-old
   destination:
     name: {{ .Values.destinationServer | default "in-cluster" }}
     namespace: {{ index .Values "kuberocketci" "namespace" }}
